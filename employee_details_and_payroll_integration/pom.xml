@@ -4,7 +4,7 @@
 
 	<groupId>com.mycompany</groupId>
 	<artifactId>employee_details_and_payroll_integration</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT_</version>
 	<packaging>mule-application</packaging>
 
 	<name>employee_details_and_payroll_integration</name>

@@ -124,6 +124,7 @@ vars.INPUTFILEDATA]]></ee:set-payload>
 				<email:content ><![CDATA[This is to inform u that the has been updated successfully in both Database and SalesForce respectively.]]></email:content>
 			</email:body>
 		</email:send>
+		<logger level="INFO" doc:name="Logger" doc:id="804f157d-39ed-495a-9151-4ef5f76695e3" message='#["E-Mail Sent Successfully"]'/>
 		<error-handler ref="Gobal_Error_Handler" />
 	</flow>
 </mule>
