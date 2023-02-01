@@ -1,0 +1,14 @@
+{
+  "sampleData": {
+    "668049c6-7153-4bd5-a865-14fa797f47b0": {
+      "payload": "sample_data/java.dwl"
+    },
+    "dfdda9ca-c4c5-45e2-9913-6189b80e45cf": {
+      "vars-DBDATA": "sample_data/list_java.dwl"
+    },
+    "0cbdcfec-035e-4e34-9070-0d39b0986cb4": {
+      "payload": "sample_data/csv.csv"
+    },
+    "68a19f4b-c070-4b44-9053-a323d5e8356f": {}
+  }
+}

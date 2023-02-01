@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_489eac7a_41fb_4bee_bcdb_887faf4aebe1_Output_Variables_DBDATA = Array<{|  Emp_Id?: Number,   First_Name?: String,   Last_Name?: String,   Date_of_Birth?: Date,   Joining_Date?: Date,   Termination_Date?: Date,   Employee_Status?: String,   Payment_Status?: String,   Phone_Number?: Any,   Address?: String,   Status?: String|}>
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="Process_API-test-suite.xml" />
+	<munit:test name="Process_API-test-suite-Process_APIFlowTest" doc:id="29a26696-d3e6-46f3-8de1-0c8471220ec1" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c6f2e393-8165-4751-be38-63a4717614e1" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="baae796a-de67-4bed-993c-8493283ec97f" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output text/csv --- readUrl('classpath://fileReadtest\mock_payload.dwl')]" mediaType="application/csv" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3075f676-7549-42b5-965b-87b434535fec" processor="salesforce:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Update" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d27460d2-598a-40d1-b14d-a54503ae647d" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Employee__c" attributeName="type" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- &#10;readUrl('classpath://munittestingFloWSALSEFORCEtest\sfdata.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when_EMAIL_SEND" doc:id="a6cf88e7-3dce-4e3b-910c-02d8f43bf985" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Send" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b475e505-3f8a-4109-be9b-11b3ab8c0c3b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://ProcessSENDEMAILtest\mock_payload.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to Process_APIFlow" doc:id="695be923-69e1-4b71-a720-3a42f33213e6" name="Process_APIFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="649d855d-bc47-4a52-ac42-d9725158c074" processor="email:send" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b475e505-3f8a-4109-be9b-11b3ab8c0c3b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

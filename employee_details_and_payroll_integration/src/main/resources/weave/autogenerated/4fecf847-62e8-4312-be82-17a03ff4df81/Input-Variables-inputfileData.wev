@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_4fecf847_62e8_4312_be82_17a03ff4df81_Input_Variables_inputfileData = Any
+

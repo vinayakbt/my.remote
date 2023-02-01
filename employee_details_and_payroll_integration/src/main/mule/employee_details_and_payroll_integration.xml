@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="8eebe492-907b-4b36-8fbf-9183af71a657" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Vbt@1234" database="SF" />
+	</db:config>
+	<file:config name="File_Config_write" doc:name="File Config" doc:id="3afed7cd-880e-4bcc-8762-7c46d6589595" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\inbound" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="b0f73b41-ef33-47e0-aa4e-97d4873e0ef2" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\inbound\Data" />
+	</file:config>
+	<file:config name="File_Config2" doc:name="File Config" doc:id="8d0a6d18-9aa1-41f2-a496-e956470d8a5f" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\inbound" />
+	</file:config>
+	<file:config name="File_Config3" doc:name="File Config" doc:id="90c12e06-73c0-48bb-b06a-304061472178" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\inbound\Archieve" />
+	</file:config>
+	<file:config name="File_Config4" doc:name="File Config" doc:id="b63ef155-7d01-4e3d-aed4-43d12638d82b" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\inbound\Archieve" />
+	</file:config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="313a1a69-9d76-4957-ab6a-31464479adea" >
+		<salesforce:basic-connection username="mulecaptrain@test.test" password="muletraining2000" securityToken="6BV8ZXMw9errNRQP0gTlibvk" />
+	</salesforce:sfdc-config>
+	<file:config name="Terminated_Data" doc:name="File Config" doc:id="561aeae5-4d85-4d55-ba35-844001eecb90" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\outbound\terminated" />
+	</file:config>
+	<file:config name="File_Config5" doc:name="File Config" doc:id="9f275747-e2e3-4209-899e-50f711c13d2c" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\outbound\terminated" />
+	</file:config>
+	<file:config name="New_Joiners" doc:name="File Config" doc:id="6e4624ee-d7c4-4a60-9156-5da515ef307a" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\outbound\New_Joiners" />
+	</file:config>
+	<file:config name="payroll_processing" doc:name="File Config" doc:id="ff9f97cc-49c3-4d99-bcf5-8d9a055f6538" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\outbound\payroll_processing" />
+	</file:config>
+	<file:config name="File_Config_InsideErrorHandling" doc:name="File Config" doc:id="c3f5dfd7-43e3-403b-a82d-5dd643ee9098" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP" />
+	</file:config>
+	<flow name="employee_details_and_payroll_integrationFlow" doc:id="bd1cc123-ebaa-4510-ae80-b9486beec067" >
+		<scheduler doc:name="Scheduler" doc:id="d42a55f9-a5fa-4876-a0bf-025fbe2e5c13" >
+			<scheduling-strategy >
+				<fixed-frequency timeUnit="SECONDS" startDelay="10"/>
+			</scheduling-strategy>
+		</scheduler>
+		<db:select doc:name="Select" doc:id="d8a4fb10-1b4d-4655-bdfa-262c7c1b5bba" config-ref="Database_Config">
+			<db:sql><![CDATA[select * from SF.Employee;]]></db:sql>
+		</db:select>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="5819f8a9-291b-4149-a403-f8232e9f1402" variableName="DBDATA"/>
+		<ee:transform doc:name="Transform Message" doc:id="fe9724bd-3884-4de1-b701-37158eaf7627">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+vars.DBDATA]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="452ca7c5-2819-4de2-a2af-72f7d65dee6b" message="#[payload]" />
+		<file:write doc:name="Write" doc:id="647aedde-6ce9-4a25-ab7d-ea2144a46218" config-ref="File_Config_write" path="#['databaseData.csv']"/>
+		<salesforce:query doc:name="Query" doc:id="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[select Id, OwnerId, IsDeleted, Name, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, LastViewedDate, LastReferencedDate, Emp_Id__c, First_Name__c, Last_Name__c, Date_of_Birth__c, Joining_Date__c, Termination_Date__c, Employee_Status__c, Payment_Status__c, Phone_Number__c, Address__c, Status__c  from Employee__c]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="1ab45446-b24f-420e-8774-7c66c6bfa2db" variableName="SALESFORCEDATA" />
+		<ee:transform doc:name="Transform Message" doc:id="26930b59-3ca9-40ec-b524-40c23163a112">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+vars.SALESFORCEDATA]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="1a82fa6d-80f6-4fc5-b7b3-44d301e9be70" message="#[payload]" />
+		<file:write doc:name="Write" doc:id="36372e8b-1860-43f5-b417-6e3eca3c3914" config-ref="File_Config_write" path="#['salesForceData.csv']" />
+		<file:read doc:name="Read" doc:id="92c60faf-3e31-4022-97f5-fa0efd5eaba8" config-ref="File_Config1" path="C:\Users\vtupparo\Downloads\SFTP\inbound\Data\CSV input.csv" />
+		<logger level="INFO" doc:name="Logger" doc:id="669dcbe7-f16c-40c3-9c34-561035ab3019" message="#[payload]" />
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="9470f508-65d1-489e-9c96-105253503bff" variableName="FILEDATA" />
+		<file:write doc:name="Write" doc:id="321a444e-e8f7-4ea4-8137-223cf0f902a2" config-ref="File_Config_write" path="#['inputFiledata.csv']" />
+		<flow-ref doc:name="Flow Reference" doc:id="aae37b5c-d378-4ca5-aa3c-c6111443e055" name="employee_details_and_payroll_integrationFlow1"/>
+		<error-handler ref="Gobal_Error_Handler" />
+	</flow>
+	<flow name="employee_details_and_payroll_integrationFlow1" doc:id="08629bca-6bef-4f59-8d6b-fae3ace65319" >
+		<file:read doc:name="Read" doc:id="b90a443d-c0d6-4c40-a90b-fb2342f2c369" config-ref="File_Config2" path="databaseData.csv"/>
+		<file:write doc:name="Write" doc:id="7a5ededb-3207-4f82-b473-1b1838934f22" config-ref="File_Config3" path="#['backup_'++ 'databaseData '++ (now() as String {format:'dd-MM-yyyy-hh-mm-ss'}) ++ &quot;.csv&quot;]"/>
+		<file:read doc:name="Read" doc:id="73d566b7-8a46-4178-9f29-0b9b55a174a2" config-ref="File_Config2" path="salesForceData.csv"/>
+		<file:write doc:name="Write" doc:id="59e004c5-0776-4b14-8f0e-220c76f62fb0" config-ref="File_Config3" path="#['backup_'++ 'SalesForceData '++ (now() as String {format:'dd-MM-yyyy-hh-mm-ss'}) ++ &quot;.csv&quot;]"/>
+		<file:read doc:name="Read" doc:id="4c8c4988-de4d-405d-bc43-825167709e0e" config-ref="File_Config2" path="inputFiledata.csv"/>
+		<file:write doc:name="Write" doc:id="d3d1fd8a-90ed-4456-848b-d7d94a097c04" config-ref="File_Config3" path="#['backup_'++ 'inputFileData '++ (now() as String {format:'dd-MM-yyyy-hh-mm-ss'}) ++ &quot;.csv&quot;]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="3c71938e-6e53-4e58-a815-56f986691ae8" name="employee_details_and_payroll_integrationFlow3" />
+		<error-handler ref="Gobal_Error_Handler" />
+	</flow>
+	<flow name="employee_details_and_payroll_integrationFlow3" doc:id="489eac7a-41fb-4bee-bcdb-887faf4aebe1">
+		<file:read doc:name="Read" doc:id="4e76fbca-82b9-401e-8e77-79fcbd654887" config-ref="File_Config4" path="C:\Users\vtupparo\Downloads\SFTP\inbound\Archieve\backup_SalesForceData 11-01-2023-10-39-20.csv" outputMimeType="application/csv" />
+		<ee:transform doc:name="Transform Message" doc:id="0a026d31-b8f5-4595-b03a-11bf6374f169">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+write(payload,"application/json")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<ee:transform doc:name="salesForceData" doc:id="5f18981f-fb7d-43ee-910b-ddd53b975763">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+read(payload,"application/json")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="b8120f1d-4474-40b0-b566-055c211a61d6">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+
+output application/json
+ 
+---
+payload     map(v1)->{
+	"Joining_Date__c":  v1.Joining_Date__c,
+	"Date_of_Birth__c" : v1.Date_of_Birth__c,
+	"Payment_Status__c": v1.Payment_Status__c,
+	"Last_Name__c":v1.Last_Name__c,
+	"Phone_Number__c":  v1.Phone_Number__c,
+	"Employee_Status__c":  v1.Employee_Status__c,
+	"First_Name__c": v1.First_Name__c,
+	"Emp_Id__c": v1.Emp_Id__c,
+	"Status__c": v1.Status__c,
+	"Source":"salesforce"
+   	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="ef2897e1-28e4-4e65-a381-0f6213299070" variableName="salesforceData" />
+		<ee:transform doc:name="Transform Message" doc:id="f597f92c-7a5f-4284-ad5b-9c46512d1043">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+ fun getDiffDays(Joining_Date) = ((now()) - (Joining_Date as Date)).days
+---
+vars.salesforceData map ((value) ->
+    if((value.Employee_Status__c == "Active" ) and getDiffDays(value.Joining_Date__c) > 15) (value) else null
+
+ 
+
+)filter !isEmpty($)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="5ce4a170-7ad3-4542-83da-b00b63990546">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv header=true
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="c6d2b119-432c-499a-bfcc-191d6136546e" message="#[payload]" />
+		<file:write doc:name="Write" doc:id="558d11f5-f9c9-4a1f-9c5f-4454f3d3a8fa" config-ref="payroll_processing" path='#["payroll_processing.csv"]'/>
+		<flow-ref doc:name="Flow Reference" doc:id="3b3c5494-ea5b-474a-884e-5991e2f2af88" name="employee_details_and_payroll_integrationFlow4"/>
+		<error-handler ref="Gobal_Error_Handler" />
+	</flow>
+	<flow name="employee_details_and_payroll_integrationFlow4" doc:id="4fecf847-62e8-4312-be82-17a03ff4df81">
+		<file:read doc:name="Read" doc:id="5b8d31f3-b27a-4a39-9a91-f66cbde9e1f9" config-ref="File_Config4" path="C:\Users\vtupparo\Downloads\SFTP\inbound\Archieve\backup_inputFileData 11-01-2023-10-39-21.csv" outputMimeType="application/csv" />
+		<ee:transform doc:name="Transform Message" doc:id="9fa67195-0de9-47af-a44a-a0fc69b483cf">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+write(payload,"application/json")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<ee:transform doc:name="inputFiledata" doc:id="60a74e0a-b130-47c9-a1c6-a151f6a8e465">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+read(payload,"application/json")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="3affdb6b-bc37-402e-8417-71a8a4c1a7d6">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+
+---
+payload map(v2)->{
+	"Joining Date":v2."Joining Date",
+	"Date of Birth":v2."Date of Birth",
+	"Payment Status": v2."Payment Status",
+	"Last Name":v2."Last Name",
+	"Phone Number": v2."Phone Number",
+	"Employee Status":v2."Employee Status",
+  	"First_Name":v2."First_Name",
+  	"Emp_Id":v2.Emp_Id,
+  	"Status":v2.Status,
+  	"Source":"inputFile"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="628bc4b7-876d-420e-85c1-cb13ef84bcce" variableName="inputfileData" />
+		<ee:transform doc:name="Transform Message" doc:id="213a5325-bb8f-46a8-a183-4e2bd2dde3c4">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv header=false
+---
+vars.inputfileData]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0a36a319-4ece-4a14-93ff-c2d63fdfa181" message="#[payload]"/>
+		<file:write doc:name="Write" doc:id="5d3a20a3-b4dd-4878-a025-b7804191b888" config-ref="payroll_processing" path='#["payroll_processing.csv"]' mode="APPEND" />
+		<flow-ref doc:name="Flow Reference" doc:id="457dad76-025e-49c3-963d-4f8c2b810d7e" name="employee_details_and_payroll_integrationFlow5" />
+		<error-handler ref="Gobal_Error_Handler" />
+	</flow>
+	<flow name="employee_details_and_payroll_integrationFlow5" doc:id="3fd25985-7a1f-45a5-ad84-29e6bba1e204" >
+		<file:read doc:name="Read" doc:id="17844f4b-0e8e-4fc4-ab96-7c8ae9cd56de" config-ref="File_Config4" path="C:\Users\vtupparo\Downloads\SFTP\inbound\Archieve\backup_databaseData 11-01-2023-10-39-20.csv" outputMimeType="application/csv" />
+		<ee:transform doc:name="Transform Message" doc:id="fc4dbb45-78d7-4a68-87bf-c802d38aab3f">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+write(payload,"application/json")]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b7e59d5d-dfdb-4714-934d-a9db1f102ea4" message="#[payload]"/>
+		<ee:transform doc:name="DataBaseData" doc:id="d10e7fb6-9a70-4966-b864-d437b84a7532">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+read(payload,"application/json")]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0434e261-e7b2-496f-8ea4-a3be2e8929a9" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="bfdb701b-ee3d-4024-b63b-86a7a905e8a9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map(v3)-> {
+	 "Joining_Date":v3.Joining_Date  , 
+	 "Date_of_Birth":v3.Date_of_Birth  ,
+	 "Payment_Status": v3.Payment_Status , 
+	 "Last_Name":v3.Last_Name ,  
+	 "Phone_Number":v3.Phone_Number   , 
+	 "Employee_Status": v3.Employee_Status,
+  	 "First_Name": v3.First_Name , 
+     "Emp_Id":v3.Emp_Id  , 
+  	 "Status": v3.Status,
+  	 "Source":"Database"
+  
+  }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b3e71b5e-3b62-4710-8bef-961524ad1d8e" message="#[payload]"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="afeea94a-3b2f-4581-aec3-d8d75064b703" variableName="databaseData" />
+		<ee:transform doc:name="Transform Message" doc:id="6ea928f3-6d90-4719-b929-ba61827e673b">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+fun getDiffDays(Joining_Date) = ((now()) - (Joining_Date as Date)).days
+---
+vars.databaseData map ((value) ->
+    if((value.Employee_Status == "Employed") and getDiffDays(value.Joining_Date) > 15) (value) else null
+
+ 
+
+)filter !isEmpty($)]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="new_joiner"><![CDATA[%dw 2.0
+output application/json
+fun getDiffDays(Joining_Date) = ((now()) - (Joining_Date as Date)).days
+---
+vars.databaseData map ((value) ->
+    if((value.Employee_Status == "Employed") and getDiffDays(value.Joining_Date) < 15) (value) else null
+
+ 
+
+)filter !isEmpty($)]]></ee:set-variable>
+						<ee:set-variable variableName="terminated"><![CDATA[%dw 2.0
+output application/json
+fun getDiffDays(Joining_Date) = ((now()) - (Joining_Date as Date)).days
+---
+vars.databaseData map ((value) ->
+    if((value.Employee_Status == "Terminated")) (value) else null
+
+ 
+
+)filter !isEmpty($)]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="9822af74-229d-4b16-afa2-a0e1a52d387f" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="5cc4986c-61db-40c5-8787-dbb4732d3b0f">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv header=false 
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="5c0b1fa2-efb0-4350-be33-869a91c1a931" message="#[payload]" />
+		<file:write doc:name="Write" doc:id="7daa4c1d-ea63-4f87-a24f-5e11d1293680" config-ref="payroll_processing" path='#["payroll_processing.csv"]' mode="APPEND"/>
+		<ee:transform doc:name="Transform Message" doc:id="86d77f35-0c3c-4b48-b452-f2e7bf8789a9">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+ vars.terminated]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="44f7e590-3ec8-4346-9bb5-332e304a03ca" message="#[payload]"/>
+		<file:write doc:name="Write" doc:id="2253052c-fa25-4aed-a7df-bc17c4e93fc7" config-ref="Terminated_Data" path='#["TerminatedDBDATA.csv"]' />
+		<ee:transform doc:name="Transform Message" doc:id="c4ccade5-38ef-4495-910e-e680e2f1ba1c">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+vars.new_joiner]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="273a9a8b-853d-4060-bde6-e010f8d2947a" message="#[payload]"/>
+		<file:write doc:name="Write" doc:id="db14598e-7855-4967-9dcd-f568990a4216" config-ref="New_Joiners" path='#["New_joinersDBDATA.csv"]' />
+		<error-handler ref="Gobal_Error_Handler" />
+	</flow>
+</mule>

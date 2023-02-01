@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="employee_details_and_payroll_integration-test-suite.xml" />
+	<munit:test name="employee_details_and_payroll_integration-test-suite-employee_details_and_payroll_integrationFlow5Test" doc:id="256d8e65-ca63-4aaa-856a-8f55d19879f0" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to employee_details_and_payroll_integrationFlow5" doc:id="552fbed1-5299-47c1-b214-242815ee9e9a" name="employee_details_and_payroll_integrationFlow5"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="31e746c5-6cc6-4d85-8c7c-ae91d030d931" expression="#[vars.databaseData]" is="#[MunitTools::notNullValue()]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="8fbf3c9a-0af5-4179-b920-c28b9f9e4206" expression="#[vars.terminated]" is="#[MunitTools::withMediaType('application/json')]"/>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="fdf03e17-8b5a-42d6-ad9c-49f5ea0fa1c2" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="New_Joiners" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="employee_details_and_payroll_integration-test-suite-employee_details_and_payroll_integrationFlow1Test" doc:id="174019a5-363b-46f3-9028-f3b072a49cc9" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to employee_details_and_payroll_integrationFlow1" doc:id="67367e7d-5ffb-4275-bda8-8df70730e059" name="employee_details_and_payroll_integrationFlow1"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="9c52c1aa-9266-48ac-8853-ebc32bf973ee" processor="file:read" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b90a443d-c0d6-4c40-a90b-fb2342f2c369" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="File_Config2" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="databaseData.csv" attributeName="path" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="09c2f8b6-0e56-44d5-b98d-8623b0d8209a" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="File_Config3" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="employee_details_and_payroll_integration-test-suite-employee_details_and_payroll_integrationFlowTest1" doc:id="e60811f1-ba7a-48d2-bd83-0c34dd95fa7a" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="2be56dbe-50b8-4217-ad32-f0d3fa799ed6" processor="salesforce:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Query" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Query" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Query" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Query" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[output application/java --- &#10;readUrl('classpath://munittestingFloWSALSEFORCEtest\mock_payload.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="fac3453a-23a9-4a44-b42c-9b52b8d1c667" processor="set-variable">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="#[payload]" attributeName="value" />
+					<munit-tools:with-attribute whereValue="1ab45446-b24f-420e-8774-7c66c6bfa2db" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[readUrl('classpath://munittestingFloWSALSEFORCEtest\set-event_payload.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to employee_details_and_payroll_integrationFlow" doc:id="d82780be-fb2b-48c7-868f-ad4b698dc511" name="employee_details_and_payroll_integrationFlow"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="1164b9b0-49c2-4f48-95f1-5506a247b9e7" atLeast="1" processor="set-variable">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="#[payload]" attributeName="value" />
+					<munit-tools:with-attribute whereValue="1ab45446-b24f-420e-8774-7c66c6bfa2db" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="employee_details_and_payroll_integration-test-suite-employee_details_and_payroll_integrationFlowTest" doc:id="17d1f16e-991e-4bd3-a973-e52e96a942a9" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when_DATABASE" doc:id="cd4e611d-d8c0-42b6-ae0e-ec4152ec2d50" processor="db:select">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Select" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d8a4fb10-1b4d-4655-bdfa-262c7c1b5bba" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Database_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value=" #[output application/java --- readUrl('classpath://munittestingFlowtest\mock_payload.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="627ee706-9f03-40f3-92fc-231e4c10d07b" processor="file:read">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="92c60faf-3e31-4022-97f5-fa0efd5eaba8" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="File_Config1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="C:\Users\vtupparo\Downloads\SFTP\inbound\Data\CSV input.csv" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[output text/csv --- readUrl('classpath://munittestingFlowFILETESTtest\mock_payload.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="904a5add-fb15-4632-8f2b-12ef03fe8dd6" processor="file:write">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="321a444e-e8f7-4ea4-8137-223cf0f902a2" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="#['inputFiledata.csv']" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[output text/csv --- readUrl('classpath://munittestingFlowFILEtest\mock_payload1.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to employee_details_and_payroll_integrationFlow" doc:id="20f476ee-6fa1-45c9-a5f5-69fbbe553076" name="employee_details_and_payroll_integrationFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="33844838-cc2a-49f1-af31-dd903bee5a50" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="321a444e-e8f7-4ea4-8137-223cf0f902a2" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="28604c01-63d7-45ae-b1b1-d00bf76a49c9" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="File_Config3" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="2d107738-8439-4575-b246-e058b81833ba" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="payroll_processing" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="0b77ff52-0a95-42bf-8c28-6fbbb6820ad6" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="payroll_processing" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify call" doc:id="28a0a334-fc0f-4e31-ad6d-ee96f7f11dbc" processor="file:write" atLeast="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Write" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="db14598e-7855-4967-9dcd-f568990a4216" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="New_Joiners" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue='#["New_joinersDBDATA.csv"]' attributeName="path" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,7 @@
+Joining_Date,Address,Termination_Date,Date_of_Birth,Payment_Status,Last_Name,Phone_Number,Employee_Status,First_Name,Emp_Id,Status
+2022-01-18T00:00:00,Flat No 001 Street1 Banglore,,1999-09-25T00:00:00,,T,7829695341,Employed,Vinayak,1111,Active
+2022-01-18T00:00:00,Flat No 002 Street2 Banglore,,1999-03-05T00:00:00,,M,0000000001,Employed,Adarsh,2222,Active
+2001-01-18T00:00:00,Flat No 001 Street1 Banglore,,1999-09-15T00:00:00,,T,7829695341,Employed,Ravuth,1111,Active
+2022-01-12T00:00:00,Flat No 002 Street2 Banglore,,1999-03-09T00:00:00,,M,0000000001,Employed,Hemanth,2222,Active
+2022-01-12T00:00:00,Flat No 002 Street2 Banglore,,1999-03-09T00:00:00,,M,0000000001,Terminated,Rajesh,2222,
+2023-01-12T00:00:00,Flat No 002 Street2 Banglore,,1999-03-09T00:00:00,,M,0464746473,Employed,Rajesh,5555,

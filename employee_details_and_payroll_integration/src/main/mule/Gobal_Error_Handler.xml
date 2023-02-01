@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<error-handler name="Gobal_Error_Handler" doc:id="c21cb4be-50f5-45c4-a4fd-e0e7dff1f75c" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue_FILE_ERRORS" doc:id="f16470d5-5978-4a0a-ae1e-9513f38745a5" type="FILE:CONNECTIVITY, FILE:ACCESS_DENIED, FILE:FILE_LOCK, FILE:ILLEGAL_PATH,FILE:RETRY_EXHAUSTED">
+			<logger level="ERROR" doc:name="Logger" doc:id="b615386e-c93f-4866-bc7f-e72aab9049b4" message="#[error.description]" />
+			<email:send doc:name="Send" doc:id="0dc6849a-7007-491c-8950-a697e6019c3b" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Regarding Error In Processing Data">
+				<email:to-addresses>
+					<email:to-address value="vinayakbt65@gmail.com" />
+				</email:to-addresses>
+				<email:body>
+					<email:content><![CDATA[#[error.detailedDescription]]]></email:content>
+				</email:body>
+			</email:send>
+			<flow-ref doc:name="Flow Reference" doc:id="7bc3ebcc-e5e5-42f5-be48-5725fed3871f" name="employee_details_and_payroll_integrationFlow1"/>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue_SALESFORCE_ERRORS" doc:id="2a6fde9f-b692-4472-ac1f-d4b44c84c614" type="SALESFORCE:CONNECTIVITY, SALESFORCE:INVALID_INPUT, SALESFORCE:INVALID_RESPONSE, SALESFORCE:LIMIT_EXCEEDED, SALESFORCE:MUTUAL_AUTHENTICATION_FAILED, SALESFORCE:NOT_FOUND, SALESFORCE:TIMEOUT">
+			<logger level="ERROR" doc:name="Logger" doc:id="98e2ec0f-8398-461e-89af-44d9f51874bf" message="#[error.description]" />
+			<email:send doc:name="Send" doc:id="0c67f1f6-563e-4993-bd60-8cb0316edd03" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Regarding Error In Processing Data">
+				<email:to-addresses>
+					<email:to-address value="vinayakbt65@gmail.com" />
+				</email:to-addresses>
+				<email:body>
+					<email:content><![CDATA[#[error.description]]]></email:content>
+				</email:body>
+			</email:send>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue_DATABASE_ERRORS" doc:id="bb40fabe-cdc1-4a12-85a2-53952442c9c7" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION">
+			<logger level="ERROR" doc:name="Logger" doc:id="8dd3f4d1-bb56-42a8-9bc7-b403889e96b1" message="#[error.description]" />
+			<email:send doc:name="Send" doc:id="a15b0304-ef3b-45b7-abf2-8b2a7cb269fe" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Regarding Error In Processing Data">
+				<email:to-addresses>
+					<email:to-address value="vinayakbt65@gmail.com" />
+				</email:to-addresses>
+				<email:body>
+					<email:content><![CDATA[#[error.description]]]></email:content>
+				</email:body>
+			</email:send>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue_MULE_EXPRESSION" doc:id="63c33dcf-235d-4282-aefb-e92499b6acc5" type="MULE:EXPRESSION">
+			<logger level="ERROR" doc:name="Logger" doc:id="b2258ca1-1c63-4a11-aadf-6c92881d1cf4" message="#[error.description]" />
+			<email:send doc:name="Send" doc:id="fc89f452-bc61-46f9-9651-242dfabe6b55" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Regarding Error In Processing Data">
+				<email:to-addresses>
+					<email:to-address value="vinayakbt65@gmail.com" />
+				</email:to-addresses>
+				<email:body>
+					<email:content><![CDATA[#[error.description]]]></email:content>
+				</email:body>
+			</email:send>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue_ANY_TYPE_ERRORS" doc:id="0a2b6d0b-c9e4-40d0-9d5e-513785919188" type="ANY">
+			<logger level="ERROR" doc:name="Logger" doc:id="89ad9c18-d079-4662-9b3d-7ba678697b0f" message="#[error.description]" />
+			<email:send doc:name="Send" doc:id="d0594f10-d01e-407d-9362-dc491903a056" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Regarding Error in Processing">
+				<email:to-addresses>
+					<email:to-address value="vinayakbt65@gmail.com" />
+				</email:to-addresses>
+				<email:body>
+					<email:content><![CDATA[#[error.description]]]></email:content>
+				</email:body>
+			</email:send>
+		</on-error-continue>
+	</error-handler>
+</mule>

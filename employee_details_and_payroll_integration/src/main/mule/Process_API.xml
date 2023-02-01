@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<file:config name="read_from_payroll_processing" doc:name="File Config" doc:id="0872de10-ef19-4b01-b868-38cde0155fbe" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\outbound\payroll_processing" />
+	</file:config>
+	<file:config name="write_final" doc:name="File Config" doc:id="5acc832c-db47-451f-bad6-54c2043de5d3" >
+		<file:connection workingDir="C:\Users\vtupparo\Downloads\SFTP\outbound" />
+	</file:config>
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="f6ddbd20-331e-49e7-9474-635fd8784a37" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="vinayakbt64@gmail.com" password="wxhypwpbctnmghgz" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<flow name="Process_APIFlow" doc:id="ff4af5e7-a348-447b-b802-0da76a8e31f5" >
+		<scheduler doc:name="Scheduler" doc:id="c869bb53-ce60-4676-bf34-9a8a3bc40181" >
+			<scheduling-strategy >
+				<fixed-frequency startDelay="30" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="27dd6c69-8581-4b40-8d66-0f54c2f57133" >
+			<file:read doc:name="Read" doc:id="baae796a-de67-4bed-993c-8493283ec97f" config-ref="read_from_payroll_processing" path="C:\Users\vtupparo\Downloads\SFTP\outbound\payroll_processing\payroll_processing.csv"/>
+		</until-successful>
+		<ee:transform doc:name="Transform Message" doc:id="2af6b97e-093a-4f0f-9c76-12f9fcf9f890" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ((value) ->
+    if((value.Source  contains  "salesforce"))(value) else null
+
+ 
+
+)filter !isEmpty($)]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="DATABASEDATA" ><![CDATA[%dw 2.0
+output application/json
+---
+payload map((value) ->
+    if((value.Source  contains  "Database"))(value) else null
+
+ 
+
+)filter !isEmpty($)]]></ee:set-variable>
+				<ee:set-variable variableName="INPUTFILEDATA" ><![CDATA[%dw 2.0
+output application/json
+---
+payload map((value) ->
+    if((value.Source  contains  "inputFile"))(value) else null
+    
+)filter !isEmpty($)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="SF_UPDATE" doc:id="4d5d1c09-51bd-4f46-aa38-a39e0f1dbeec" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload     map(v1)->{
+	"Joining_Date__c":  v1.Joining_Date__c,
+	"Date_of_Birth__c" : v1.Date_of_Birth__c,
+	"Payment_Status__c":  "Payment Processed",
+	"Last_Name__c":v1.Last_Name__c,
+	"Phone_Number__c":  v1.Phone_Number__c,
+	"Employee_Status__c":  v1.Employee_Status__c,
+	"First_Name__c": v1.First_Name__c,
+	"Emp_Id__c": v1.Emp_Id__c,
+	 
+	}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update doc:name="Update" doc:id="d27460d2-598a-40d1-b14d-a54503ae647d" config-ref="Salesforce_Config" type="Employee__c"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d8eff45d-f01d-4a76-8f5b-e38c8853d250" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="f79d3f4d-1997-4cd1-b46b-1c1ee19ae14a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+ vars.DATABASEDATA map()->{
+
+  	 "Joining_Date":$.Joining_Date__c  , 
+	 "Date_of_Birth":$.Date_of_Birth__c  ,
+	 "First_Name":$.First_Name__c
+	 
+  	 
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="48e4fbc6-8167-460b-af93-6a45aa25d5a5" collection="#[payload]">
+			<db:update doc:name="Update" doc:id="442b5033-72f5-4321-9b26-07a9fa9af768" config-ref="Database_Config">
+				<db:sql ><![CDATA[UPDATE employee
+set Status='Active' 
+WHERE First_Name = :First_Name]]></db:sql>
+				<db:input-parameters ><![CDATA[#[{First_Name: payload.First_Name}]]]></db:input-parameters>
+			</db:update>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="331c28de-9313-4c0c-aabf-f21f15ca05e5" message="#[vars.DATABASEDATA]"/>
+		<ee:transform doc:name="Transform Message" doc:id="cf2bf095-bc59-4ac5-9aae-370820d54404" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+vars.INPUTFILEDATA]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="b3032a66-3eb3-456e-b66d-9a1a75698398" config-ref="write_final" path='#["Final_inputFile_output.csv"]'/>
+		<logger level="INFO" doc:name="Logger" doc:id="51ff6d54-7e14-4cbc-b658-f867e140ff5d" message="#[vars.INPUTFILEDATA]"/>
+		<email:send doc:name="Send" doc:id="b475e505-3f8a-4109-be9b-11b3ab8c0c3b" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Data Updated Successfully">
+			<email:to-addresses >
+				<email:to-address value="vinayakbt65@gmail.com" />
+			</email:to-addresses>
+			<email:body >
+				<email:content ><![CDATA[This is to inform u that the has been updated successfully in both Database and SalesForce respectively.]]></email:content>
+			</email:body>
+		</email:send>
+		<error-handler ref="Gobal_Error_Handler" />
+	</flow>
+</mule>
