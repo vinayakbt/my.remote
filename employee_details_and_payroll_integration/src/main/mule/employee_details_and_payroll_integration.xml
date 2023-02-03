@@ -53,8 +53,8 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 				<fixed-frequency timeUnit="SECONDS" startDelay="10"/>
 			</scheduling-strategy>
 		</scheduler>
-		<db:select doc:name="Select" doc:id="d8a4fb10-1b4d-4655-bdfa-262c7c1b5bba" config-ref="Database_Config">
-			<db:sql><![CDATA[select * from SF.Employee;]]></db:sql>
+		<db:select doc:name="Select" doc:id="d8a4fb10-1b4d-4655-bdfa-262c7c1b5bba" config-ref="Database_Config_Global">
+			<db:sql><![CDATA[select * from ${DataBase}.Employee;]]></db:sql>
 		</db:select>
 		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="5819f8a9-291b-4149-a403-f8232e9f1402" variableName="DBDATA"/>
 		<ee:transform doc:name="Transform Message" doc:id="fe9724bd-3884-4de1-b701-37158eaf7627">
@@ -67,7 +67,7 @@ vars.DBDATA]]></ee:set-payload>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="452ca7c5-2819-4de2-a2af-72f7d65dee6b" message="#[payload]" />
 		<file:write doc:name="Write" doc:id="647aedde-6ce9-4a25-ab7d-ea2144a46218" config-ref="File_Config_write" path="#['databaseData.csv']"/>
-		<salesforce:query doc:name="Query" doc:id="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" config-ref="Salesforce_Config">
+		<salesforce:query doc:name="Query" doc:id="0842b768-0b52-4ad4-87ac-d8656b0a5ef7" config-ref="Salesforce_Config_Global">
 			<salesforce:salesforce-query><![CDATA[select Id, OwnerId, IsDeleted, Name, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, LastViewedDate, LastReferencedDate, Emp_Id__c, First_Name__c, Last_Name__c, Date_of_Birth__c, Joining_Date__c, Termination_Date__c, Employee_Status__c, Payment_Status__c, Phone_Number__c, Address__c, Status__c  from Employee__c]]></salesforce:salesforce-query>
 		</salesforce:query>
 		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="1ab45446-b24f-420e-8774-7c66c6bfa2db" variableName="SALESFORCEDATA" />
