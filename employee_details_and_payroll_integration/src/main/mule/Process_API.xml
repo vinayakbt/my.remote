@@ -79,7 +79,7 @@ payload     map(v1)->{
 	}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<salesforce:update doc:name="Update" doc:id="d27460d2-598a-40d1-b14d-a54503ae647d" config-ref="Salesforce_Config" type="Employee__c"/>
+		<salesforce:update doc:name="Update" doc:id="d27460d2-598a-40d1-b14d-a54503ae647d" config-ref="Salesforce_Config_Global" type="Employee__c"/>
 		<logger level="INFO" doc:name="Logger" doc:id="d8eff45d-f01d-4a76-8f5b-e38c8853d250" message="#[payload]"/>
 		<ee:transform doc:name="Transform Message" doc:id="f79d3f4d-1997-4cd1-b46b-1c1ee19ae14a" >
 			<ee:message >
@@ -98,7 +98,7 @@ output application/json
 			</ee:message>
 		</ee:transform>
 		<foreach doc:name="For Each" doc:id="48e4fbc6-8167-460b-af93-6a45aa25d5a5" collection="#[payload]">
-			<db:update doc:name="Update" doc:id="442b5033-72f5-4321-9b26-07a9fa9af768" config-ref="Database_Config">
+			<db:update doc:name="Update" doc:id="442b5033-72f5-4321-9b26-07a9fa9af768" config-ref="Database_Config_Global">
 				<db:sql ><![CDATA[UPDATE employee
 set Status='Active' 
 WHERE First_Name = :First_Name]]></db:sql>
@@ -116,9 +116,9 @@ vars.INPUTFILEDATA]]></ee:set-payload>
 		</ee:transform>
 		<file:write doc:name="Write" doc:id="b3032a66-3eb3-456e-b66d-9a1a75698398" config-ref="write_final" path='#["Final_inputFile_output.csv"]'/>
 		<logger level="INFO" doc:name="Logger" doc:id="51ff6d54-7e14-4cbc-b658-f867e140ff5d" message="#[vars.INPUTFILEDATA]"/>
-		<email:send doc:name="Send" doc:id="b475e505-3f8a-4109-be9b-11b3ab8c0c3b" config-ref="Email_SMTP" fromAddress="vinayakbt64@gmail.com" subject="Data Updated Successfully">
+		<email:send doc:name="Send" doc:id="b475e505-3f8a-4109-be9b-11b3ab8c0c3b" config-ref="Email_SMTP_Global" fromAddress="${From}" subject="Data Updated Successfully">
 			<email:to-addresses >
-				<email:to-address value="vinayakbt65@gmail.com" />
+				<email:to-address value="${ToAdress}" />
 			</email:to-addresses>
 			<email:body >
 				<email:content ><![CDATA[This is to inform u that the has been updated successfully in both Database and SalesForce respectively.]]></email:content>
