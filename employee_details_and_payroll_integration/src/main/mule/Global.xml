@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="1895e41f-cbf3-4f07-8ad2-7394325264c7" file="config.properties" />
+	<db:config name="Database_Config_Global" doc:name="Database Config" doc:id="84070439-b749-4942-9dd5-33dfa57ca7c9" >
+		<db:my-sql-connection host="${DBHost}" port="${DBPort}" user="${DBUser}" password="${DBPassword}" database="${DataBase}" />
+	</db:config>
+	<salesforce:sfdc-config name="Salesforce_Config_Global" doc:name="Salesforce Config" doc:id="96265b6d-140f-42ba-aec9-7333cc291d32" >
+		<salesforce:basic-connection username="${User}" password="${password}" securityToken="${Token}" />
+	</salesforce:sfdc-config>
+	<email:smtp-config name="Email_SMTP_Global" doc:name="Email SMTP" doc:id="cb0daf34-0771-4a78-beaf-131fe2ea9340" >
+		<email:smtp-connection host="${Host}" port="${port}" user="${EmailUser}" password="${Password}" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+</mule>
